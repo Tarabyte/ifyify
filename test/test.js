@@ -239,4 +239,87 @@ describe('ifyify', function() {
             });
         });
     });
+
+    describe('chainify', function() {
+        it('should be defined', function() {
+            ify.chainify.should.be.a('function');
+        });
+
+        it('should return a function', function() {
+            ify.chainify(function() {}).should.be.a('function');
+        });
+
+        it('function should return context', function() {
+            var ctx = {},
+                arg = {},
+                func = function(data) {
+                    data.should.be.equal(arg);
+                    this.should.be.equal(ctx);
+                };
+
+            ify.chainify(func).call(ctx, arg).should.be.equal(ctx);
+        });
+
+        it('should work with objects', function() {
+            var obj = {
+                a: function() {
+                    var a = 1;
+                    return a;
+                },
+                b: function(val) {
+                    this.val = val;
+                },
+                c: 'not a function',
+                d: function() {
+                    var returnSmth = 1;
+                }
+            };
+            ify.chainify(obj).should.be.equal(obj);
+
+            obj.c.should.be.equal('not a function');
+            obj.a().should.be.equal(1);
+            obj.b(3).should.be.equal(obj);
+            obj.val.should.be.equal(3);
+            obj.d().should.be.equal(obj);
+        });
+
+        it('should allow to use dynamic chaining', function() {
+            var obj = {
+                val: 1,
+                hybrid: function(val) {
+                    if(val === undefined) {
+                        return this.val;
+                    }
+                    else {
+                        this.val = val;
+                    }
+                }
+            };
+
+            ify.chainify(obj).hybrid().should.be.equal(1);
+            t(ify.chainify(obj).hybrid(7)).to.be.undefined;
+
+            ify.chainify(obj, true);
+
+            obj.hybrid().should.be.equal(7);
+            obj.hybrid(9).should.be.equal(obj);
+        });
+
+        it('should provide dynamic chaining for function', function() {
+            var hybrid = function (val) {
+                if(val === undefined) {
+                    return this.val;
+                }
+                else {
+                    this.val = val;
+                }
+            }, ctx = {val: 1};
+
+            hybrid = ify.chainify(hybrid, true);
+
+            hybrid.call(ctx).should.be.equal(1);
+            hybrid.call(ctx, 7).should.be.equal(ctx);
+            ctx.val.should.be.equal(7);
+        });
+    });
 });

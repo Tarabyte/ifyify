@@ -78,7 +78,7 @@ gulp.task('test', function() {
 gulp.task('watch', function () {
     watch({ //gulp.watch doesn't work with new files :(
         glob: [allJs, notLibPath],
-        emitOnGlob: false
+        emitOnGlob: false //we don't need to rebuild when launched
     }, function() { //rebuild
         gulp.start('build');
     });
