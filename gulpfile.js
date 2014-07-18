@@ -2,15 +2,18 @@
 var gulp = require('gulp');
 var hint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
+var watch = require('gulp-watch');
 
 var through = require('through2');
 var gutil = require('gulp-util');
 var fs = require('fs');
 var path = require('path');
 
-var allJs = './src/*.js';
-var allTests = './test/*.js';
-var libName = 'ifyify.js';
+var allJs = 'src/*.js';
+var allTests = 'test/*.js';
+var libName = 'ifyify.js',
+    libPath = path.join('src', libName),
+    notLibPath = '!' + libPath;
 
 gulp.task('hint', function() {
     return gulp.src(allJs)
@@ -37,7 +40,7 @@ function build() {
                 module = require(filePath);
 
                 if(typeof module === 'function') {
-                    acc.push(module.name + ': ' + loadStr);
+                    acc.push((module.name || path.basename(filePath, '.js')) + ': ' + loadStr);
                 }
                 else {
                     Object.keys(module).forEach(function(name) {
@@ -60,7 +63,7 @@ function build() {
 }
 
 gulp.task('build', function() {
-    gulp.src([allJs, '!./src/' + libName])
+    gulp.src([allJs, notLibPath])
         .pipe(build())
         .pipe(gulp.dest('./src'));
 });
@@ -73,8 +76,14 @@ gulp.task('test', function() {
 });
 
 gulp.task('watch', function () {
-    gulp.watch([allJs, '!./src/' + libName], ['build']);
-    gulp.watch('./src/' + libName, ['hint', 'test']);
+    watch({ //gulp.watch doesn't work with new files :(
+        glob: [allJs, notLibPath],
+        emitOnGlob: false
+    }, function() { //rebuild
+        gulp.start('build');
+    });
+
+    gulp.watch(libPath, ['hint', 'test']);
     gulp.watch(allTests, ['test']);
 });
 

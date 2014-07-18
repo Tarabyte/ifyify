@@ -7,5 +7,6 @@ module.exports = {
 	everyify: require('./arrayify.js').everyify,
 	someify: require('./arrayify.js').someify,
 	reduceify: require('./arrayify.js').reduceify,
-	callbackify: require('./callbackify.js')
+	callbackify: require('./callbackify.js'),
+	factorify: require('./factorify.js')
 };

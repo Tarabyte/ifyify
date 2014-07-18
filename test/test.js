@@ -174,4 +174,69 @@ describe('ifyify', function() {
         });
 
     });
+
+    describe('factorify', function() {
+        it('should be defined', function() {
+            ify.factorify.should.be.a('function');
+        });
+
+        it('should return a function', function() {
+            ify.factorify(function () {}).should.be.a('function');
+        });
+
+        function Person(name) {
+            this.name = name;
+        }
+
+        var personFactory = ify.factorify(Person);
+
+        it('should return a function', function() {
+            personFactory.should.be.a('function');
+        });
+
+        var joe = personFactory('joe');
+        it('should create instances', function() {
+            joe.should.be.instanceof(Person);
+            joe.name.should.be.equal('joe');
+        });
+
+        var inst = {};
+        function Singleton() {
+            return inst;
+        }
+
+        var singletonFactory = ify.factorify(Singleton);
+
+        it('should return object returned by a constructor', function() {
+            singletonFactory().should.be.equal(inst);
+        });
+
+        it('should provide many method', function() {
+            personFactory.many.should.be.a('function');
+        });
+
+        it('should allow to create array of instances', function() {
+            var people = personFactory.many('joe ann james basil'.split(' '));
+
+            people.should.have.length(4);
+            people.every(function(person) {
+                person.should.be.instanceof(Person);
+            });
+        });
+
+        function Person2(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        var personFactory2 = ify.factorify(Person2);
+
+        it('should work with array of arrays', function() {
+            var people = personFactory2.many([['joe', 27], ['ann', 43]]);
+            people.should.have.length(2);
+            people.every(function(person) {
+                person.should.be.instanceof(Person2);
+            });
+        });
+    });
 });

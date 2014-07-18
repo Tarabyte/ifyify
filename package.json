@@ -30,6 +30,7 @@
     "gulp-jshint": "^1.7.1",
     "through2": "^0.5.1",
     "gulp-util": "^2.2.20",
-    "chai": "^1.9.1"
+    "chai": "^1.9.1",
+    "gulp-watch": "^0.6.8"
   }
 }
