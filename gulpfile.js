@@ -8,7 +8,7 @@ var gutil = require('gulp-util');
 var fs = require('fs');
 var path = require('path');
 
-var allJs = './src/**/*.js';
+var allJs = './src/*.js';
 var allTests = './test/*.js';
 var libName = 'ifyify.js';
 
@@ -28,9 +28,13 @@ function build() {
             return next();
     }, function() {
             var all = files.reduce(function(acc, file) {
-                var module = require(file.path),
-                    fileName = './' + path.basename(file.path), //this line sucks. How to add trailing dot?
+                var filePath = file.path,
+                    module,
+                    fileName = './' + path.basename(filePath), //this line sucks. How to add trailing dot?
                     loadStr = 'require(\'' + fileName +'\')';
+
+                delete require.cache[require.resolve(filePath)]; //remove cached version
+                module = require(filePath);
 
                 if(typeof module === 'function') {
                     acc.push(module.name + ': ' + loadStr);
@@ -56,9 +60,9 @@ function build() {
 }
 
 gulp.task('build', function() {
-    return gulp.src([allJs, '!./src/' + libName])
-    .pipe(build())
-    .pipe(gulp.dest('./src'));
+    gulp.src([allJs, '!./src/' + libName])
+        .pipe(build())
+        .pipe(gulp.dest('./src'));
 });
 
 gulp.task('test', function() {
@@ -69,7 +73,8 @@ gulp.task('test', function() {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(allJs, ['hint', 'build', 'test']);
+    gulp.watch([allJs, '!./src/' + libName], ['build']);
+    gulp.watch('./src/' + libName, ['hint', 'test']);
     gulp.watch(allTests, ['test']);
 });
 
