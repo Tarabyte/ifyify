@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha test/*.js"
+    "build": "gulp build",
+    "test": "gulp build && gulp test"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "gulp": "^3.8.6",
     "gulp-jshint": "^1.7.1",
     "through2": "^0.5.1",
-    "gulp-util": "^2.2.20"
+    "gulp-util": "^2.2.20",
+    "chai": "^1.9.1"
   }
 }
