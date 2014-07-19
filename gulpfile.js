@@ -109,9 +109,10 @@ gulp.task('tag', ['bump-minor'], function () {
 
   return gulp.src('./')
     .pipe(git.commit(message))
-    .pipe(git.tag(v, message))
-    .pipe(git.push('origin', 'master', '--tags'))
-    .pipe(gulp.dest('./'));
+    .pipe(git.tag(v, message, {}, function(err, data) {
+        console.log(err);
+    }))
+    .pipe(git.push('origin', 'master', '--tags').end());
 });
 
 //publish to npm
