@@ -1,7 +1,7 @@
 {
   "name": "ifyify",
   "version": "0.0.0",
-  "description": "0.1.0",
+  "description": "Functional utils",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -31,6 +31,8 @@
     "through2": "^0.5.1",
     "gulp-util": "^2.2.20",
     "chai": "^1.9.1",
-    "gulp-watch": "^0.6.8"
+    "gulp-watch": "^0.6.8",
+    "gulp-bump": "^0.1.10",
+    "gulp-git": "^0.4.3"
   }
 }

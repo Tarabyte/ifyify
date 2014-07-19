@@ -3,6 +3,8 @@ var gulp = require('gulp');
 var hint = require('gulp-jshint');
 var mocha = require('gulp-mocha');
 var watch = require('gulp-watch');
+var bump = require('gulp-bump');
+var git = require('gulp-git');
 
 var through = require('through2');
 var gutil = require('gulp-util');
@@ -88,3 +90,32 @@ gulp.task('watch', function () {
 });
 
 gulp.task('default', ['hint', 'build', 'test', 'watch']);
+
+
+//bump version tasks
+'major|minor|patch'.split('|').forEach(function(type) {
+    gulp.task('bump-' + type, function() {
+        return gulp.src('./package.json')
+                .pipe(bump({type: type}))
+                .pipe(gulp.dest('./'));
+    });
+});
+
+//release
+gulp.task('tag', ['bump-minor'], function () {
+  var pkg = require('./package.json');
+  var v = 'v' + pkg.version;
+  var message = 'Release ' + v;
+
+  return gulp.src('./')
+    .pipe(git.commit(message))
+    .pipe(git.tag(v, message))
+    .pipe(git.push('origin', 'master', '--tags'))
+    .pipe(gulp.dest('./'));
+});
+
+//publish to npm
+gulp.task('npm', ['tag'], function (done) {
+  require('child_process').spawn('npm', ['publish'], { stdio: 'inherit' })
+    .on('close', done);
+});
