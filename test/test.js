@@ -45,6 +45,7 @@ describe('ifyify', function() {
             ify.callbackify(function() {
                 i++;
                 t(true).to.be.true;
+                return data;
             })(false, data, function (err, arg) {
                 i++;
                 err.should.be.false;
@@ -61,6 +62,15 @@ describe('ifyify', function() {
                 err.should.be.ok;
             });
         });
+
+        it('should pass function result to next', function() {
+            ify.callbackify(function add(a, b) {
+                return a + b;
+            })(false, 4, 5, function(err, res) {
+                err.should.be.false;
+                res.should.be.equal(9)
+            })
+        })
     });
 
     describe('arrayify', function() {

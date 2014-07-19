@@ -1,15 +1,25 @@
 /*jshint node:true*/
+var slice = [].slice;
 module.exports = function callbackify(cb) {
-    return function (err, data, next) {
+    return function (err/*, [data1, [data2]...], next*/) {
+        var args = slice.call(arguments, 1),
+            next = args.pop();
+        if(typeof next !== 'function') { //no next callback
+            args.push(next);
+            next = null;
+        }
         if(err) {
             return next && next(err);
         }
         try {
-            cb(data);
+            args = cb.apply(this, args);
+            args = Array.isArray(args) ? args : [args];
         }
         catch (e) {
             err = e;
         }
-        return next && next(err, data);
+        args.unshift(err);
+
+        return next && next.apply(this, args);
     };
 };

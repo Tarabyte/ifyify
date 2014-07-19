@@ -51,7 +51,7 @@ function build() {
                 }
 
                 return acc;
-            }, []);
+            }, []).sort();
 
             this.push(new gutil.File({
                 path: libName,
