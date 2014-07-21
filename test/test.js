@@ -68,9 +68,9 @@ describe('ifyify', function() {
                 return a + b;
             })(false, 4, 5, function(err, res) {
                 err.should.be.false;
-                res.should.be.equal(9)
-            })
-        })
+                res.should.be.equal(9);
+            });
+        });
     });
 
     describe('arrayify', function() {
@@ -180,6 +180,24 @@ describe('ifyify', function() {
                 });
 
                 toObj(['a', 'b'], {}).should.be.deep.equal({a: 'a', b: 'b'});
+            });
+        });
+
+        describe('mapify', function() {
+            it('should be a function', function() {
+                ify.mapify.should.be.a('function');
+            });
+
+            it('should return a function', function() {
+                ify.mapify(function(){}).should.be.a('function');
+            });
+
+            it('should mapify array', function() {
+                var square = ify.mapify(function(value) {
+                    return value*value;
+                });
+
+                square([1, 2, 3]).should.be.deep.equal([1, 4, 9]);
             });
         });
 

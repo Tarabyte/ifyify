@@ -7,6 +7,7 @@ module.exports = {
 	factorify: require('./factorify.js'),
 	filterify: require('./arrayify.js').filterify,
 	foreachify: require('./arrayify.js').foreachify,
+	mapify: require('./arrayify.js').mapify,
 	reduceify: require('./arrayify.js').reduceify,
 	someify: require('./arrayify.js').someify,
 	sortify: require('./arrayify.js').sortify

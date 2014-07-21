@@ -120,6 +120,7 @@ A small collection of wrappers for array methods:
 - `everyify` checks if a predicate holds for every element
 - `someify` checks if a predicate holds for any element
 - `reduceify` reduces a given array
+- `mapify` maps a given array
 
 ```javascript
 //sorting
@@ -133,5 +134,12 @@ var sorted = sortNumerically([1.1, 2, 1, 0.7, 1.5, 3]); //[0.7, 1, 1.1, 1.5, 2, 
 var clean = ify.filterify(Boolean);
 
 var cleaned = clean([1, 0, false, "2", undefined]); //[1, "2"]
+
+//maping
+var square = ify.mapify(function(x) {
+    return x * x;
+});
+
+var squared = square([1, 2, 3]); // [1, 4, 9]
 
 ```

@@ -5,7 +5,7 @@ var customNames = {
 },
     slice = Array.prototype.slice;
 
-module.exports = 'sort|filter|forEach|every|some|reduce'.split('|').reduce(function(module, name) {
+module.exports = 'sort|filter|forEach|every|some|reduce|map'.split('|').reduce(function(module, name) {
     module[(customNames[name] || name) + 'ify'] = function(cb) {
         return function(arr, arg1, arg2 /*rest*/) {
             var args,
